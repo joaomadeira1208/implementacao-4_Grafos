@@ -42,10 +42,13 @@ void Grafo::printaGrafo()
     cout << "}";
 }
 
-void geraGrid(vector<Pixel> pixels)
+void Grafo::geraGrid(vector<Pixel> pixels)
 {
+    int i = 0;
     for(Pixel p : pixels)
     {
-        
+        Vertice temp(p, i);
+        addVertice(temp);
+        i++;
     }
 }
