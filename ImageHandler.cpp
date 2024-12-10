@@ -40,9 +40,9 @@ vector<Pixel> ImageHandler::loadImage()
     int x = 0, y = 0;
     while (file >> r >> g >> b)
     {
-        uint8_t red = r;
-        uint8_t green = g;
-        uint8_t blue = b;
+        uint8_t red = static_cast<uint8_t>(r);
+        uint8_t green = static_cast<uint8_t>(g);
+        uint8_t blue = static_cast<uint8_t>(b);
 
         pixels.emplace_back(Pixel(x, y, red, green, blue));
         if (++x == width)
