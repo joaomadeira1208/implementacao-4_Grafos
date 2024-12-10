@@ -10,6 +10,10 @@ int main()
     vector<Pixel> pixels = ih.loadImage();
 
     cout << "Pixels carregados: " << pixels.size() << endl;
+    
+    Grafo grafo;
 
+    
+    
     return 0;
 }
