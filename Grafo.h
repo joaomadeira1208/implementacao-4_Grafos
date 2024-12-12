@@ -1,17 +1,19 @@
 #ifndef GRAFO_H
 #define GRAFO_H
+
 #include <vector>
 #include <unordered_map>
-#include "Aresta.h"
+#include <string>
 #include "Vertice.h"
-using namespace std;
+#include "Aresta.h"
+class Segmentacao; // Declaração antecipada
 
 class Grafo
 {
 private:
-    vector<Vertice> vertices;
-    vector<Aresta> arestas;
-    unordered_map<string, Aresta> hashArestas;
+    std::vector<Vertice> vertices;
+    std::vector<Aresta> arestas;
+    std::unordered_map<std::string, Aresta> hashArestas;
 
 public:
     Grafo();
@@ -19,7 +21,11 @@ public:
     void addAresta(int u, int v, int w);
     void ordenarArestas();
     void printaGrafo();
-    void geraGrid(vector<Pixel> pixels);
+    std::vector<Vertice> getVertices();
+    std::vector<Aresta> getArestas();
+    void criaArestas();
+    void geraGrid(std::vector<Pixel> pixels);
+    Segmentacao segmentar(int k);
 };
 
 #endif

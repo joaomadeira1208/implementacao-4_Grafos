@@ -2,6 +2,8 @@
 
 using namespace std;
 
+Aresta::Aresta(){}
+
 Aresta::Aresta(int u, int v, int w)
     : u(u), v(v), w(w) {}
 

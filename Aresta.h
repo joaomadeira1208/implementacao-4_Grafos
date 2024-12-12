@@ -9,6 +9,7 @@ private:
     int w;
 
 public:
+    Aresta();
     Aresta(int u, int v, int w);
     int getU();
     int getV();
