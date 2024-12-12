@@ -13,6 +13,8 @@ public:
     int getU();
     int getV();
     int getW();
+
+    void setW(int w);
 };
 
 #endif

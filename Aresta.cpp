@@ -19,3 +19,8 @@ int Aresta::getW()
 {
     return w;
 }
+
+void Aresta::setW(int w)
+{
+    this->w = w;
+}
