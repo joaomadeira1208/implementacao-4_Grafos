@@ -24,7 +24,7 @@ public:
     void addAresta(int u, int v, int w);
     void ordenarArestas();
     void printaGrafo();
-    vector<Vertice> getVertices();
+    vector<Vertice>& getVertices();
     vector<Aresta>& getArestas();
     void criaArestas();
     void geraGrid(vector<Pixel> pixels);

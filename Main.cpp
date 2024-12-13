@@ -9,44 +9,38 @@
 // Para Compilar use:
 // g++ -o programa *.cpp -std=c++17
 
+
+void applyGaussian(const string& inputFile, const string& outputFile, float sigma) {
+
+// Construct the Python command
+string command = "python script.py \"" + inputFile + ".ppm\" \"" + outputFile + ".ppm\" " + to_string(sigma);
+
+// Execute the command
+int result = system(command.c_str());
+
+// Check if the command executed successfully
+if (result != 0) {
+    cerr << "Error occurred while attempting to convert the file." << endl;
+    }
+}
+
 int main()
 {
-    ImageHandler ih("input.ppm");
+
+    applyGaussian("paper", "output", 0.8);
+
+    ImageHandler ih("output.ppm");
+    
     vector<Pixel> pixels = ih.loadImage();
 
-    vector<Vertice> vertices;
-    unordered_map<int, int> hashComponentes;
-
-    int index_1 = 0;
-    int index_2 = 0;
-
-    cout << "Pixels carregados: " << pixels.size() << endl;
-    for (int i = 0; i < pixels.size(); i++)
-    {
-        if (i < 2)
-        {
-            cout << "GET X: " << " " << pixels[i].getX()
-                 << endl;
-            cout << "GET Y: " << " " << pixels[i].getY() << endl;
-        }
-        vertices.emplace_back(Vertice(pixels[i], i));
-        hashComponentes[i] = index_1;
-
-        index_2++;
-
-        if (index_2 == 11594)
-        {
-            index_1++;
-            index_2 = 0;
-        }
-    }
+    Grafo grafo;
 
     grafo.geraGrid(pixels);
     grafo.criaArestas();
 
-    Segmentacao seg = grafo.segmentar(300); // Segmentar com k = 300
+    Segmentacao seg = grafo.segmentar(30'000); // Segmentar com k = 300
     unordered_map<int, int> components = seg.getComponents();
-
+    
     // Usando um set para armazenar os componentes únicos
     unordered_set<int> uniqueComponents;
 
@@ -57,5 +51,10 @@ int main()
 
     // Exibe a quantidade de componentes únicos
     cout << "Quantidade de componentes únicos: " << uniqueComponents.size() << endl;
+
+
+    ih.saveImage(components, grafo.getVertices());
+
+
     return 0;
 }

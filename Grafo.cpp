@@ -9,7 +9,7 @@ using namespace std;
 
 Grafo::Grafo() {}
 
-vector<Vertice> Grafo::getVertices()
+vector<Vertice>& Grafo::getVertices()
 {
     return this->vertices;
 }
@@ -123,7 +123,7 @@ float threshold(int num_componente, int k)
 
 float MInt(int componente1, int componente2, 
            int card_componente1, int card_componente2,
-           unordered_map<int, int> maioresArestas, int k)
+           unordered_map<int, int>& maioresArestas, int k)
 {
     int maior_aresta_componente_1 = maioresArestas[componente1];
     int maior_aresta_componente_2 = maioresArestas[componente2];
@@ -151,7 +151,7 @@ Segmentacao Grafo::segmentar(int k) {
         int u = e.getU();
         int v = e.getV();
         int w = e.getW();
-
+        
         int raizU = seg.find(u);
         int raizV = seg.find(v);
 

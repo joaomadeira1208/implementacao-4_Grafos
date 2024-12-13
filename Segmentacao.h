@@ -23,7 +23,7 @@ public:
     int getK() const;
     int getSize(int raiz);
     std::unordered_map<int, int> getComponents();
-    std::unordered_map<int, int> getMaioresArestas() const;
+    std::unordered_map<int, int>& getMaioresArestas();
 };
 
 #endif

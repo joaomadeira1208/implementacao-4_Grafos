@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -92,8 +93,16 @@ void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Ve
     file << maxValue << "\n";
 
     vector<Pixel> pixelsOrdenados(width * height);
+
+
+
     int coresIndex = 0;
     int index = 0;
+
+    int contador = 0;
+    unordered_map<int, int> vetor;
+
+
     for (const auto &pair : hashComponentes)
     {
         int v = pair.first;
@@ -101,14 +110,19 @@ void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Ve
         Vertice vertice = vertices[v];
         Pixel pixel = vertice.getPixel();
 
+        if (vetor.count(componente) == 0) {
+            vetor[componente] = contador;
+            contador++;
+        }
+        
 
-        if (componente > coresPredefinadas.size())
+        if (contador > coresPredefinadas.size())
         {
             aumentarCores(coresPredefinadas, coresIndex);
             coresIndex++;
         }
 
-        pixel = Pixel(pixel.getX(), pixel.getY(), coresPredefinadas[componente].getR(), coresPredefinadas[componente].getG(), coresPredefinadas[componente].getB());
+        pixel = Pixel(pixel.getX(), pixel.getY(), coresPredefinadas[vetor[componente]].getR(), coresPredefinadas[vetor[componente]].getG(), coresPredefinadas[vetor[componente]].getB());
 
 
         int posicao = pixel.getY() * width + pixel.getX();

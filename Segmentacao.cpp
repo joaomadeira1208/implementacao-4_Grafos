@@ -62,6 +62,6 @@ unordered_map<int, int> Segmentacao::getComponents() {
     return components;
 }
 
-unordered_map<int, int> Segmentacao::getMaioresArestas() const {
+unordered_map<int, int>& Segmentacao::getMaioresArestas() {
     return maioresArestas;
 }
