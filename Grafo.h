@@ -7,13 +7,16 @@
 #include "Vertice.h"
 #include "Aresta.h"
 class Segmentacao; // Declaração antecipada
+using namespace std;
 
 class Grafo
 {
 private:
-    std::vector<Vertice> vertices;
-    std::vector<Aresta> arestas;
-    std::unordered_map<std::string, Aresta> hashArestas;
+    vector<Vertice> vertices;
+    vector<Aresta> arestas;
+    unordered_map<string, Aresta> hashArestas;
+    vector<int> pai;
+    vector<int> tamanho;
 
 public:
     Grafo();
@@ -21,10 +24,10 @@ public:
     void addAresta(int u, int v, int w);
     void ordenarArestas();
     void printaGrafo();
-    std::vector<Vertice> getVertices();
-    std::vector<Aresta> getArestas();
+    vector<Vertice> getVertices();
+    vector<Aresta>& getArestas();
     void criaArestas();
-    void geraGrid(std::vector<Pixel> pixels);
+    void geraGrid(vector<Pixel> pixels);
     Segmentacao segmentar(int k);
 };
 
