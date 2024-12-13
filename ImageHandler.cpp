@@ -1,7 +1,11 @@
 #include "ImageHandler.h"
+#include "Grafo.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
+
+using namespace std;
 
 ImageHandler::ImageHandler(const string &path) : path(path) {}
 
@@ -23,7 +27,6 @@ vector<Pixel> ImageHandler::loadImage()
         throw runtime_error("Formato de imagem não suportado. Apenas PPM é suportado.");
     }
 
-    int width, height, maxValue;
     file >> width >> height >> maxValue;
 
     cout << "Largura: " << width << endl;
@@ -54,4 +57,71 @@ vector<Pixel> ImageHandler::loadImage()
 
     file.close();
     return pixels;
+}
+
+void aumentarCores(vector<Pixel> &coresPredefinadas, int coresIndex)
+{
+    int r = (coresIndex * 50) % 256;
+    int g = (coresIndex * 80) % 256;
+    int b = (coresIndex * 110) % 256;
+    coresPredefinadas.emplace_back(Pixel(0, 0, r, g, b));
+}
+
+void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Vertice> &vertices)
+{
+    // vector<Vertice> vertices = grafo.getVertices();
+    vector<Pixel> coresPredefinadas = {
+        Pixel(0, 0, static_cast<uint8_t>(255), static_cast<uint8_t>(0), static_cast<uint8_t>(0)),     // Vermelho
+        Pixel(0, 0, static_cast<uint8_t>(0), static_cast<uint8_t>(255), static_cast<uint8_t>(0)),     // Verde
+        Pixel(0, 0, static_cast<uint8_t>(0), static_cast<uint8_t>(0), static_cast<uint8_t>(255)),     // Azul
+        Pixel(0, 0, static_cast<uint8_t>(255), static_cast<uint8_t>(255), static_cast<uint8_t>(0)),   // Amarelo
+        Pixel(0, 0, static_cast<uint8_t>(255), static_cast<uint8_t>(0), static_cast<uint8_t>(255)),   // Magenta
+        Pixel(0, 0, static_cast<uint8_t>(0), static_cast<uint8_t>(255), static_cast<uint8_t>(255)),   // Ciano
+        Pixel(0, 0, static_cast<uint8_t>(255), static_cast<uint8_t>(255), static_cast<uint8_t>(255)), // Branco
+    };
+
+    ofstream file("output.ppm");
+
+    if (!file.is_open())
+    {
+        throw runtime_error("Erro ao criar o arquivo de saída.");
+    }
+
+    file << "P3\n";
+    file << width << " " << height << "\n";
+    file << maxValue << "\n";
+
+    vector<Pixel> pixelsOrdenados(width * height);
+    int coresIndex = 0;
+    int index = 0;
+    for (const auto &pair : hashComponentes)
+    {
+        int v = pair.first;
+        int componente = pair.second;
+        Vertice vertice = vertices[v];
+        Pixel pixel = vertice.getPixel();
+
+
+        if (componente > coresPredefinadas.size())
+        {
+            aumentarCores(coresPredefinadas, coresIndex);
+            coresIndex++;
+        }
+
+        pixel = Pixel(pixel.getX(), pixel.getY(), coresPredefinadas[componente].getR(), coresPredefinadas[componente].getG(), coresPredefinadas[componente].getB());
+
+
+        int posicao = pixel.getY() * width + pixel.getX();
+        pixelsOrdenados[posicao] = pixel;
+    }
+
+    for (Pixel &pixel : pixelsOrdenados)
+    {
+        file << static_cast<int>(pixel.getR()) << " "
+             << static_cast<int>(pixel.getG()) << " "
+             << static_cast<int>(pixel.getB()) << "\n";
+    }
+
+    file.close();
+    cout << "Imagem final salva como 'output.ppm'." << endl;
 }

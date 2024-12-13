@@ -10,6 +10,7 @@ private:
 
 public:
     Pixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
+    Pixel();
     int getX();
     int getY();
     uint8_t getR();

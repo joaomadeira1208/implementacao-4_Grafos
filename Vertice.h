@@ -4,18 +4,15 @@
 
 class Vertice
 {
-    private:
-
+private:
     Pixel pixel;
     int v;
 
-    public:
-
+public:
     Vertice(Pixel pixel, int v);
     Pixel getPixel();
     int getV();
-
-
+    void setPixel(Pixel pixel);
 };
 
 #endif
