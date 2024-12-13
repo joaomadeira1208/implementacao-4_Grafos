@@ -14,7 +14,7 @@ vector<Vertice> Grafo::getVertices()
     return this->vertices;
 }
 
-vector<Aresta> Grafo::getArestas()
+vector<Aresta>& Grafo::getArestas()
 {
     return this->arestas;
 }
@@ -73,7 +73,8 @@ void Grafo::geraGrid(vector<Pixel> pixels)
     }
 }
 
- 
+
+
 void Grafo::criaArestas()
 {
     int width = vertices.back().getPixel().getX() + 1;
@@ -114,76 +115,60 @@ void Grafo::criaArestas()
     }
 }
 
-/*Grafo Grafo::geraGrafoNulo()
+
+float threshold(int num_componente, int k)
 {
-    Grafo retorno;
-
-    for(Vertice v : this->vertices)
-    {
-        retorno.addVertice(v);
-    }
-    return retorno;
-}
-*/
-
-
-float threshold(Grafo componente, int k)
-{
-    return k/(componente.getVertices().size());
+    return k/num_componente;
 }
 
-float INT(Grafo componente)
+float MInt(int componente1, int componente2, 
+           int card_componente1, int card_componente2,
+           unordered_map<int, int> maioresArestas, int k)
 {
-    vector<Aresta> arestas = componente.getArestas();
-    vector<float> pesos;
-    for(Aresta e : arestas)
-    {
-        pesos.push_back(e.getW());
-    }
-    return *max_element(pesos.begin(), pesos.end());
-}
-
-float MInt(Grafo componente1, Grafo componente2)
-{
-    return min((INT(componente1) + threshold(componente1, 0)), (INT(componente2) + threshold(componente2, 0)));
+    int maior_aresta_componente_1 = maioresArestas[componente1];
+    int maior_aresta_componente_2 = maioresArestas[componente2];
+    return min((maior_aresta_componente_1 + threshold(card_componente1, k)), 
+               (maior_aresta_componente_2 + threshold(card_componente2, k))
+              );
 }
 
 
-Segmentacao Grafo::segmentar(int k)
-{
 
+Segmentacao Grafo::segmentar(int k) {
     Segmentacao seg;
-
-    //cout << "Entrou segmentar";
     seg.setK(k);
-    //cout << "Entrou K";
-    seg.setGrafo(getVertices(), {});
-    //cout << "Entrou setGrafo";
-    seg.inicializaHash(this->vertices);
-    //cout << "Entrou hash";
-    this->ordenarArestas();
-    //cout << "Entrou ordenar";
 
+    this->ordenarArestas(); // Ordena as arestas por peso
 
-    /*for(Aresta e : this->getArestas())
-    {
+    int n = vertices.size();
+    seg.initializeUnionFind(n); // Inicializa Union-Find
+
+    int i = this->getArestas().size();
+    auto& arestasRef = this->getArestas();
+
+    for (auto& e : arestasRef) {
+        
         int u = e.getU();
         int v = e.getV();
         int w = e.getW();
 
-        int componente_1 = seg.getComponente(u);
-        int componente_2 = seg.getComponente(v);
+        int raizU = seg.find(u);
+        int raizV = seg.find(v);
 
-        if(componente_1 != componente_2)
-        {
-            if(w <= MInt(componente_1, componente_2))
-            {
-                aux.addAresta(u,v,w);
+        if (raizU != raizV) {
+            // Verifica o critério de segmentação
+            if (w <= MInt(raizU, raizV, seg.getSize(raizU), seg.getSize(raizV), seg.getMaioresArestas(), k)) {
+                seg.unionSets(u, v, w); // Une os componentes
             }
-            hashcompoentes[v] = ha=sh
         }
-    }*/
+        if (i % 1000 == 0) 
+        { // Atualiza a cada 1000 iterações
+            cout << "Faltam " << i << " iterações" << endl;
+        }
+        i--;
+    }
 
-   return seg;
+    return seg;
 }
+
 
