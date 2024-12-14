@@ -17,7 +17,8 @@ private:
     unordered_map<string, Aresta> hashArestas;
     vector<int> pai;
     vector<int> tamanho;
-
+    int bfs(int source, int sink, vector<int> &parent, vector<vector<int>> &capacity, vector<vector<int>> &adj);
+    
 public:
     Grafo();
     void addVertice(Vertice v);

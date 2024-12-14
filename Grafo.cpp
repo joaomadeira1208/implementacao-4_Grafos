@@ -132,6 +132,72 @@ float MInt(int componente1, int componente2,
               );
 }
 
+int Grafo::bfs(int source, int sink, vector<int> &pai, vector<vector<int>> &capacidade, vector<vector<int>> &adj)
+{
+    fill(pai.begin(), pai.end(), -1);
+    pai[source] = source;
+    queue<pair<int, int>> q;
+    q.push({source, INT_MAX});
+
+    while (!q.empty())
+    {
+        int atual = q.front().first;
+        int flow = q.front().second;
+        q.pop();
+
+        for (int next : adj[atual])
+        {
+            if (pai[next] == -1 && capacidade[atual][next] > 0)
+            {
+                pai[next] = atual;
+                int new_flow = min(flow, capacidade[atual][next]);
+                if (next == sink)
+                {
+                    return new_flow;
+                }
+                q.push({next, new_flow});
+            }
+        }
+    }
+    return 0;
+}
+
+int Grafo::maxFlow(int source, int sink)
+{
+    int n = vertices.size();
+    vector<vector<int>> capacidade(n, vector<int>(n, 0));
+    vector<vector<int>> adj(n);
+
+    for (Aresta &aresta : arestas)
+    {
+        int u = aresta.getU();
+        int v = aresta.getV();
+        int w = aresta.getW();
+
+        capacidade[u][v] += w; 
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    int flow = 0;
+    vector<int> pai(n);
+    int new_flow;
+
+    while ((new_flow = bfs(source, sink, pai, capacidade, adj)) > 0)
+    {
+        flow += new_flow;
+        int atual = sink;
+        while (atual != source)
+        {
+            int prev = pai[atual];
+            capacidade[prev][atual] -= new_flow;
+            capacidade[atual][prev] += new_flow;
+            atual = prev;
+        }
+    }
+
+    return flow;
+}
 
 
 Segmentacao Grafo::segmentar(int k) {
