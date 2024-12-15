@@ -27,7 +27,7 @@ if (result != 0) {
 int main()
 {
 
-    applyGaussian("paper", "output", 0.8);
+    applyGaussian("cavalo", "output", 0.8);
 
     ImageHandler ih("output.ppm");
     
@@ -38,7 +38,7 @@ int main()
     grafo.geraGrid(pixels);
     grafo.criaArestas();
 
-    Segmentacao seg = grafo.segmentar(30'000); // Segmentar com k = 300
+    Segmentacao seg = grafo.segmentar(100'000); // Segmentar com k = 300
     unordered_map<int, int> components = seg.getComponents();
     
     // Usando um set para armazenar os componentes únicos

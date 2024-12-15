@@ -36,7 +36,6 @@ def apply_gaussian_blur(input_file, output_file, sigma):
                 f.write("\n")
 
         print(f"Blurred image saved to {output_file}")
-        print('PAU NELES')
 
     except Exception as e:
         print(f"Error: {e}")
