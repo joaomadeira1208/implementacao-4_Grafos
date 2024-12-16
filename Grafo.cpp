@@ -9,12 +9,12 @@ using namespace std;
 
 Grafo::Grafo() {}
 
-vector<Vertice>& Grafo::getVertices()
+vector<Vertice> &Grafo::getVertices()
 {
     return this->vertices;
 }
 
-vector<Aresta>& Grafo::getArestas()
+vector<Aresta> &Grafo::getArestas()
 {
     return this->arestas;
 }
@@ -65,15 +65,13 @@ void Grafo::printaGrafo()
 void Grafo::geraGrid(vector<Pixel> pixels)
 {
     int i = 0;
-    for(Pixel p : pixels)
+    for (Pixel p : pixels)
     {
         Vertice temp(p, i);
         addVertice(temp);
         i++;
     }
 }
-
-
 
 void Grafo::criaArestas()
 {
@@ -88,9 +86,7 @@ void Grafo::criaArestas()
         int currentVerticeIndex = v.getV();
 
         vector<pair<int, int>> vizinhos = {
-            {-1, -1}, {0, -1}, {1, -1},
-            {-1, 0},           {1, 0},
-            {-1, 1}, {0, 1}, {1, 1}};
+            {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
 
         for (auto [dx, dy] : vizinhos)
         {
@@ -102,39 +98,34 @@ void Grafo::criaArestas()
                 int neighborIndex = ny * width + nx;
                 Pixel neighborPixel = vertices[neighborIndex].getPixel();
 
-                // Calcula a distância euclidiana entre os pixels
                 int dr = p.getR() - neighborPixel.getR();
                 int dg = p.getG() - neighborPixel.getG();
                 int db = p.getB() - neighborPixel.getB();
                 int weight = static_cast<int>(std::sqrt(dr * dr + dg * dg + db * db));
 
-                // Cria uma aresta com o peso calculado
                 addAresta(currentVerticeIndex, neighborIndex, weight);
             }
         }
     }
 }
 
-
 float threshold(int num_componente, int k)
 {
-    return k/num_componente;
+    return k / num_componente;
 }
 
-float MInt(int componente1, int componente2, 
+float MInt(int componente1, int componente2,
            int card_componente1, int card_componente2,
-           unordered_map<int, int>& maioresArestas, int k)
+           unordered_map<int, int> &maioresArestas, int k)
 {
     int maior_aresta_componente_1 = maioresArestas[componente1];
     int maior_aresta_componente_2 = maioresArestas[componente2];
-    return min((maior_aresta_componente_1 + threshold(card_componente1, k)), 
-               (maior_aresta_componente_2 + threshold(card_componente2, k))
-              );
+    return min((maior_aresta_componente_1 + threshold(card_componente1, k)),
+               (maior_aresta_componente_2 + threshold(card_componente2, k)));
 }
 
-
-
-Segmentacao Grafo::segmentar(int k) {
+Segmentacao Grafo::segmentar(int k)
+{
     Segmentacao seg;
     seg.setK(k);
 
@@ -144,24 +135,27 @@ Segmentacao Grafo::segmentar(int k) {
     seg.initializeUnionFind(n); // Inicializa Union-Find
 
     int i = this->getArestas().size();
-    auto& arestasRef = this->getArestas();
+    auto &arestasRef = this->getArestas();
 
-    for (auto& e : arestasRef) {
-        
+    for (auto &e : arestasRef)
+    {
+
         int u = e.getU();
         int v = e.getV();
         int w = e.getW();
-        
+
         int raizU = seg.find(u);
         int raizV = seg.find(v);
 
-        if (raizU != raizV) {
+        if (raizU != raizV)
+        {
             // Verifica o critério de segmentação
-            if (w <= MInt(raizU, raizV, seg.getSize(raizU), seg.getSize(raizV), seg.getMaioresArestas(), k)) {
+            if (w <= MInt(raizU, raizV, seg.getSize(raizU), seg.getSize(raizV), seg.getMaioresArestas(), k))
+            {
                 seg.unionSets(u, v, w); // Une os componentes
             }
         }
-        if (i % 1000 == 0) 
+        if (i % 1000 == 0)
         { // Atualiza a cada 1000 iterações
             cout << "Faltam " << i << " iterações" << endl;
         }
@@ -170,5 +164,3 @@ Segmentacao Grafo::segmentar(int k) {
 
     return seg;
 }
-
-

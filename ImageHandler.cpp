@@ -70,7 +70,6 @@ void aumentarCores(vector<Pixel> &coresPredefinadas, int coresIndex)
 
 void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Vertice> &vertices)
 {
-    // vector<Vertice> vertices = grafo.getVertices();
     vector<Pixel> coresPredefinadas = {
         Pixel(0, 0, static_cast<uint8_t>(255), static_cast<uint8_t>(0), static_cast<uint8_t>(0)),     // Vermelho
         Pixel(0, 0, static_cast<uint8_t>(0), static_cast<uint8_t>(255), static_cast<uint8_t>(0)),     // Verde
@@ -94,14 +93,11 @@ void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Ve
 
     vector<Pixel> pixelsOrdenados(width * height);
 
-
-
     int coresIndex = 0;
     int index = 0;
 
     int contador = 0;
     unordered_map<int, int> vetor;
-
 
     for (const auto &pair : hashComponentes)
     {
@@ -110,11 +106,11 @@ void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Ve
         Vertice vertice = vertices[v];
         Pixel pixel = vertice.getPixel();
 
-        if (vetor.count(componente) == 0) {
+        if (vetor.count(componente) == 0)
+        {
             vetor[componente] = contador;
             contador++;
         }
-        
 
         if (contador > coresPredefinadas.size())
         {
@@ -123,7 +119,6 @@ void ImageHandler::saveImage(unordered_map<int, int> &hashComponentes, vector<Ve
         }
 
         pixel = Pixel(pixel.getX(), pixel.getY(), coresPredefinadas[vetor[componente]].getR(), coresPredefinadas[vetor[componente]].getG(), coresPredefinadas[vetor[componente]].getB());
-
 
         int posicao = pixel.getY() * width + pixel.getX();
         pixelsOrdenados[posicao] = pixel;

@@ -57,19 +57,17 @@ int main()
     grafo.geraGrid(pixels);
     grafo.criaArestas();
 
-    Segmentacao seg = grafo.segmentar(100'000); // Segmentar com k = 300
+    Segmentacao seg = grafo.segmentar(100'000);
     unordered_map<int, int> components = seg.getComponents();
 
-    // Usando um set para armazenar os componentes únicos
     unordered_set<int> uniqueComponents;
 
     for (const auto &[vertice, componente] : components)
     {
-        // Adiciona o componente ao set, garantindo que ele seja único
+
         uniqueComponents.insert(componente);
     }
 
-    // Exibe a quantidade de componentes únicos
     cout << "Quantidade de componentes únicos: " << uniqueComponents.size() << endl;
 
     ih.saveImage(components, grafo.getVertices());
