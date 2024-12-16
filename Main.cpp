@@ -9,28 +9,47 @@
 // Para Compilar use:
 // g++ -o programa *.cpp -std=c++17
 
+void applyGaussian(const string &inputFile, const string &outputFile, float sigma)
+{
 
-void applyGaussian(const string& inputFile, const string& outputFile, float sigma) {
+    // Construct the Python command
+    string command = "python script.py \"" + inputFile + ".ppm\" \"" + outputFile + ".ppm\" " + to_string(sigma);
 
-// Construct the Python command
-string command = "python script.py \"" + inputFile + ".ppm\" \"" + outputFile + ".ppm\" " + to_string(sigma);
+    // Execute the command
+    int result = system(command.c_str());
 
-// Execute the command
-int result = system(command.c_str());
-
-// Check if the command executed successfully
-if (result != 0) {
-    cerr << "Error occurred while attempting to convert the file." << endl;
+    // Check if the command executed successfully
+    if (result != 0)
+    {
+        cerr << "Error occurred while attempting to convert the file." << endl;
     }
+}
+
+bool importarBibiliotecas()
+{
+    string command = "pip install numpy pillow scipy";
+
+    int result = system(command.c_str());
+
+    if (result != 0)
+    {
+        return false;
+    }
+    return true;
 }
 
 int main()
 {
+    if (!importarBibiliotecas())
+    {
+        cerr << "Erro ao importar as bibiliotecas, certifique que você possua o pip instalado." << endl;
+        return 1;
+    }
 
     applyGaussian("cavalo", "output", 0.8);
 
     ImageHandler ih("output.ppm");
-    
+
     vector<Pixel> pixels = ih.loadImage();
 
     Grafo grafo;
@@ -40,11 +59,12 @@ int main()
 
     Segmentacao seg = grafo.segmentar(100'000); // Segmentar com k = 300
     unordered_map<int, int> components = seg.getComponents();
-    
+
     // Usando um set para armazenar os componentes únicos
     unordered_set<int> uniqueComponents;
 
-    for (const auto& [vertice, componente] : components) {
+    for (const auto &[vertice, componente] : components)
+    {
         // Adiciona o componente ao set, garantindo que ele seja único
         uniqueComponents.insert(componente);
     }
@@ -52,9 +72,7 @@ int main()
     // Exibe a quantidade de componentes únicos
     cout << "Quantidade de componentes únicos: " << uniqueComponents.size() << endl;
 
-
     ih.saveImage(components, grafo.getVertices());
-
 
     return 0;
 }
